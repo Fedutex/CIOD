@@ -1,0 +1,8 @@
+<!-- blog_detail.html -->
+
+<h2>{{ blog.title }}</h2>
+<img src="{{ blog.image.url }}" alt="{{ blog.title }}">
+<p>{{ blog.description }}</p>
+<h5>Autor: {{ blog.autor }}</h5>
+<p>Publicado el: {{ blog.created_at }}</p>
+<a href="{% url 'blog' %}">Volver al blog</a>

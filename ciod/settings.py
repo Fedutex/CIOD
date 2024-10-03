@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-m2l9=g=o#cnt+kob5nd2&g(1ls0s!9w@k$cff8%pw8h5*g*-f%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['federicoalvarez.pythonanywhere.com']
+ALLOWED_HOSTS = ['federicoalvarez.pythonanywhere.com','localhost', '127.0.0.1']
 
 
 # Application definition
@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'ciod.urls'
@@ -127,3 +128,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = Path(BASE_DIR / 'media')
+
+LOGIN_REDIRECT_URL = '/'
+

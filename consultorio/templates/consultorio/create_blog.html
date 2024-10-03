@@ -1,0 +1,8 @@
+<!-- templates/consultorio/create_blog.html -->
+
+<h2>Subir un nuevo Blog</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Subir Blog</button>
+</form>
