@@ -19,11 +19,18 @@
 
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <script src="https://unpkg.com/purecounterjs/dist/purecounter.js"></script>
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+
+
+
+
+
   
 
   <!-- Main CSS File -->
@@ -68,7 +75,7 @@
     <div class="row gy-5">
 
       {% for blog in blogs %}
-      <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+      <div id="blog-{{ blog.id }}" class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
         <div class="team-member">
           <div class="member-img">
             <img src="{{ blog.image.url }}" class="img-fluid" alt="{{ blog.title }}">
@@ -83,8 +90,15 @@
             </p>
             <hr>
             <h7>Autor <strong>{{ blog.autor }}</strong></h7>
-            <i class="fas fa-check-circle" style="color: #00b300;"></i> 
+            <i class="fas fa-check-circle" style="color: #00b300;"></i>
+            {% if user.is_authenticated %} 
             <a href="{% url 'edit_blog' blog.id %}" style="float: right;">Editar</a>
+
+            <!-- Botón de Eliminar con alerta de confirmación de JavaScript -->
+            <button class="btn btn-danger btn-sm" onclick="deleteBlog('{{ blog.id }}');" style="float: right; margin-right: 10px;">
+              Eliminar
+            </button>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -134,5 +148,52 @@
   <!-- Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
 
-</body>
+  <script>
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  
+    function deleteBlog(blogId) {
+    if (confirm("¿Estás seguro de que deseas eliminar este blog?")) {
+      fetch(`/blog/delete/${blogId}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          let blogElement = document.getElementById(`blog-${blogId}`);
+          if (blogElement) {
+            blogElement.remove();  // Eliminar el elemento solo si existe
+          } else {
+            console.error(`Error: No se encontró el elemento blog-${blogId} en el DOM.`);
+          }
+        } else {
+          alert("Error al intentar eliminar el blog.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Error al intentar eliminar el blog.");
+      });
+    }
+  }
+  </script>
+
+  </body>
 </html>
+

@@ -8,7 +8,9 @@ urlpatterns = [
     path('blog', views.blog, name='blog'),
     path('create_blog/', views.create_blog, name='create_blog'),
     path('blog/<str:title_slug>/', views.blog_detail, name='blog_detail'),
-    path('blog/edit/<int:blog_id>/', views.edit_blog, name='edit_blog'),  # Agregar esta línea
+    path('blog/edit/<int:blog_id>/', views.edit_blog, name='edit_blog'), 
+    path('blog/delete/<int:blog_id>/', views.delete_blog, name='delete_blog'),
+
 ]
 
 if settings.DEBUG:

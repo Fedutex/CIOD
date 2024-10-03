@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Blog
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 
 def consultorio(request):
@@ -63,3 +64,24 @@ def edit_blog(request, blog_id):
         form = BlogForm(instance=blog)  # Cargar el formulario con los datos actuales del blog
 
     return render(request, 'consultorio/edit_blog.html', {'form': form, 'blog': blog})
+
+
+@login_required
+def delete_blog(request, blog_id):
+    from django.http import JsonResponse
+
+    blog = get_object_or_404(Blog, id=blog_id)
+    print(f"Blog encontrado: {blog.title}")  # Para verificar si encuentra el blog correctamente
+
+    if request.method == 'POST':
+        try:
+            blog.delete()
+            print(f"Blog eliminado: {blog.title}")  # Confirmar si el blog se eliminó correctamente
+
+            return JsonResponse({'success': True}, status=200)
+        except Exception as e:
+            print(f"Error al eliminar: {str(e)}")  # Mostrar cualquier error en la consola
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    print("Método no permitido")  # Ver si el método es incorrecto
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
